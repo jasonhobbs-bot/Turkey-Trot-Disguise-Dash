@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "turkeyRooms": {
+      "$roomCode": {
+        ".read": "auth != null",
+        ".write": "auth != null && ((!data.exists() && newData.child('ownerUid').val() === auth.uid) || (data.child('ownerUid').val() === auth.uid && !newData.exists()))",
+        ".validate": "newData.hasChildren(['code','track','status','ownerUid','createdAt','startAt','racers']) && newData.child('code').val() === $roomCode && newData.child('track').isNumber() && newData.child('track').val() >= 0 && newData.child('track').val() <= 11 && newData.child('createdAt').isNumber() && newData.child('startAt').isNumber() && newData.child('ownerUid').isString() && newData.child('status').isString() && (newData.child('status').val() === 'waiting' || newData.child('status').val() === 'racing')",
+        "ownerUid": {
+          ".write": "auth != null && data.val() === auth.uid && newData.isString() && newData.parent().child('racers').hasChild(newData.val())"
+        },
+        "status": {
+          ".write": "auth != null && data.parent().child('ownerUid').val() === auth.uid && data.val() === 'waiting' && newData.val() === 'racing'"
+        },
+        "startAt": {
+          ".write": "auth != null && data.parent().child('ownerUid').val() === auth.uid && data.parent().child('status').val() === 'waiting' && newData.isNumber()"
+        },
+        "racers": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && (!data.exists() ? data.parent().parent().child('status').val() === 'waiting' : true)",
+            ".validate": "newData.hasChildren(['name','costume','ready','distance','lane','finishedMs']) && newData.child('name').isString() && newData.child('name').val().length <= 16 && newData.child('costume').isNumber() && newData.child('costume').val() >= 0 && newData.child('costume').val() <= 11 && newData.child('ready').isBoolean() && newData.child('distance').isNumber() && newData.child('distance').val() >= 0 && newData.child('distance').val() <= 19800 && newData.child('lane').isNumber() && newData.child('lane').val() >= -1.58 && newData.child('lane').val() <= 1.58 && newData.child('finishedMs').isNumber() && newData.child('finishedMs').val() >= 0 && newData.child('finishedMs').val() <= 3600000"
+          }
+        }
+      }
+    }
+  }
+}
