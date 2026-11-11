@@ -144,7 +144,7 @@ async function call(method,...args){
    if(id!==uid||token!==uid)throw Error('Invalid racer session.');
    if(raw.status==='racing'&&up){
     const previous=raw.racers[uid];
-    const max=6600*3;
+   const max=42240*3;
     const distance=Math.max(Number(previous.distance)||0,Math.round(number(up.distance,0,max)));
     const patch={distance,lane:number(up.lane,-1.58,1.58)};
     if(up.finishedMs && !previous.finishedMs)patch.finishedMs=Math.round(number(up.finishedMs,0,3600000));
